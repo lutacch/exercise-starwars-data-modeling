@@ -8,10 +8,10 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
+class User(Base):
     __tablename__ = 'user'
     id = Column(Integer , primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(Integer, ForeignKey("user.id"))
     user_name = Column(String(250), nullable=False)
     first_name = Column(String(100))
     last_name = Column(String(100))
@@ -22,28 +22,31 @@ class Person(Base):
 class Follower(Base):
     __tablename__ = 'follower'
     id = Column(Integer , primary_key=True)
+    name = Column(Integer, ForeignKey("user.id"))
     user_name = Column(String(250), nullable=False)
-    user_from_id = Column(Integer, nullable=False)
-    user_to_id = Column(Integer, nullable=False)
+    user_from_id = Column(Integer,ForeignKey("user.id"))
+ 
 
     def to_dict(self):
         return {}
    
 class Post(Base):
     __tablename__ = 'post'
-    id = Column(Integer , primary_key=True)
+    id = Column(Integer, primary_key=True )
+    name = Column(Integer, ForeignKey("user.id"))
     user_name = Column(String(250), nullable=False)
-    
-
+    post = Column(String(500), ForeignKey("comment.id"))
     def to_dict(self):
         return {}
    
    
 class Comment(Base):
     __tablename__ = 'comment'
-    id = Column(Integer , primary_key=True)
+    name = Column(Integer, ForeignKey("user.id"))
+    id = Column(Integer, primary_key=True )
     user_name = Column(String(250), nullable=False)
     text_inside = Column(String(250))
+    media = Column(String(250), ForeignKey("media.id"))
 
     def to_dict(self):
         return {}
@@ -54,7 +57,7 @@ class Media(Base):
     id = Column(Integer , primary_key=True)
     user_name = Column(String(250), nullable=False)
     url = Column(String(250))
-    post_id = Column(Integer)
+    post_id = Column(Integer, ForeignKey("post_id"))
 
     def to_dict(self):
         return {}
@@ -63,4 +66,4 @@ class Media(Base):
 
 
 ## Draw from SQLAlchemy base
-render_er(Base, 'diagram.png')
+render_er(Base, 'diagramInstagram.png')
